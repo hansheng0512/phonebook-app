@@ -52,6 +52,12 @@ def create_contact():
     db.session.commit()
     return Response("OK", status=200)
 
+@app.route("/contact/<int:id>", methods=["DELETE"])
+def detete_contact(id):
+    Contact.query.filter(Contact.id == id).delete()
+    db.session.commit()
+    return Response("OK", status=200)
+
 
 if __name__ == "__main__":
 
