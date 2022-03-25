@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, Response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from errors import errors
@@ -44,7 +46,8 @@ def get_contact():
 
 @app.route("/contact/create", methods=["POST"])
 def create_contact():
-    contact_1 = Contact('666', '666')
+    data = json.loads(request.data)
+    contact_1 = Contact(data["name"], data["phone_no"])
     db.session.add(contact_1)
     db.session.commit()
     return Response("OK", status=200)
