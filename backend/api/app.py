@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.register_blueprint(errors)
 
 # Database
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contact.sqlite3'
 db = SQLAlchemy(app)
 
@@ -53,8 +54,8 @@ def create_contact():
     return Response("OK", status=200)
 
 @app.route("/contact/<int:id>", methods=["DELETE"])
-def detete_contact(id):
-    Contact.query.filter(Contact.id == id).delete()
+def delete_contact(id):
+    a = Contact.query.filter(Contact.id == id).delete()
     db.session.commit()
     return Response("OK", status=200)
 
@@ -70,4 +71,4 @@ if __name__ == "__main__":
     db.session.commit()
     contact_list = Contact.query.all()
 
-    app.run(host="0.0.0.0", port=9999, debug=True)
+    app.run(host="0.0.0.0", port=9999, debug=True, threaded=True)
