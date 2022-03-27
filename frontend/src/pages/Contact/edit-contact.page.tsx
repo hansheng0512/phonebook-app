@@ -2,19 +2,17 @@ import {useEffect} from "react";
 import { Form, Input, Button, Checkbox } from 'antd';
 import axios from "axios";
 
-export const CreateContactPage = () => {
+export const EditContactPage = ({ selectedContact, setIsModalVisible }: any) => {
 
     const [form] = Form.useForm();
 
     const onFinish = () => {
         form.validateFields().then(values => {
-            axios.post('/contact/create', values)
-                .then(res => {
-                    alert("DONE")
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            axios.patch(`/contact/${selectedContact.id}`, values).then(() => {
+                alert("DONE")
+                form.resetFields();
+                setIsModalVisible(false);
+            });
         });
     };
 
@@ -22,12 +20,19 @@ export const CreateContactPage = () => {
         console.log('Failed:', errorInfo);
     };
 
+    useEffect(() => {
+        form.setFieldsValue({
+            name: selectedContact.name,
+            phone_no: selectedContact.phone_no,
+        });
+    }, [selectedContact]);
+
     return (
         <Form
             form={form}
             name="basic"
-            labelCol={{ span: 2 }}
-            wrapperCol={{ span: 22 }}
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -50,7 +55,7 @@ export const CreateContactPage = () => {
 
             <div style={{ textAlign: 'center' }}>
                 <Button type="primary" htmlType="submit">
-                    Create
+                    Edit
                 </Button>
             </div>
         </Form>
