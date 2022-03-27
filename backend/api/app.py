@@ -14,6 +14,7 @@ db = SQLAlchemy(app)
 
 from backend.api.models.contact import Contact
 
+db.drop_all()
 db.create_all()
 
 
