@@ -2,6 +2,9 @@ from backend.api.app import db
 
 
 class Contact(db.Model):
+
+    __tablename__ = 'contact'
+
     id = db.Column('id', db.Integer, primary_key = True)
     name = db.Column(db.String(100))
     phone_no = db.Column(db.String(100))

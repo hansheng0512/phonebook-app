@@ -9,27 +9,12 @@ app.register_blueprint(errors)
 
 # Database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contact.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost:3308/phone'
 db = SQLAlchemy(app)
 
 from backend.api.models.contact import Contact
 
-
-@app.route("/")
-def index():
-    return Response("Hello, world!", status=200)
-
-
-@app.route("/custom", methods=["POST"])
-def custom():
-    payload = request.get_json()
-
-    if payload.get("say_hello") is True:
-        output = jsonify({"message": "Hello!"})
-    else:
-        output = jsonify({"message": "..."})
-
-    return output
+db.create_all()
 
 
 @app.route("/health")
@@ -53,22 +38,24 @@ def create_contact():
     db.session.commit()
     return Response("OK", status=200)
 
+
 @app.route("/contact/<int:id>", methods=["DELETE"])
 def delete_contact(id):
-    a = Contact.query.filter(Contact.id == id).delete()
+    db.session.delete(db.session.query(Contact).filter_by(id=id).first())
+    db.session.commit()
+    return Response("OK", status=200)
+
+
+@app.route("/contact/<int:id>", methods=["patch"])
+def edit_contact(id):
+    dt = json.loads(request.data)
+    contact = db.session.query(Contact).filter_by(id=id).first()
+    contact.name = dt["name"]
+    contact.phone_no = dt["phone_no"]
+    db.session.merge(contact)
     db.session.commit()
     return Response("OK", status=200)
 
 
 if __name__ == "__main__":
-
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
-
-    contact_1 = Contact('123', '123')
-    db.session.add(contact_1)
-    db.session.commit()
-    contact_list = Contact.query.all()
-
-    app.run(host="0.0.0.0", port=9999, debug=True, threaded=True)
+    app.run(host="0.0.0.0", port=9999, debug=True)
