@@ -41,7 +41,6 @@ def create_contact():
 
 @app.route("/contact/<int:id>", methods=["DELETE"])
 def delete_contact(id):
-    print("HI")
     db.session.delete(db.session.query(Contact).filter_by(id=id).first())
     db.session.commit()
     return Response("OK", status=200)
@@ -59,4 +58,4 @@ def edit_contact(id):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=9999, debug=True)
+    app.run(host="0.0.0.0", port=9999)
