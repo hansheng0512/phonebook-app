@@ -36,14 +36,18 @@ def create_contact():
     contact_1 = Contact(data["name"], data["phone_no"])
     db.session.add(contact_1)
     db.session.commit()
-    return Response("OK", status=200)
+    return jsonify({
+        "message": "Contact created successfully"
+    }), 200
 
 
 @app.route("/contact/<int:id>", methods=["DELETE"])
 def delete_contact(id):
     db.session.delete(db.session.query(Contact).filter_by(id=id).first())
     db.session.commit()
-    return Response("OK", status=200)
+    return jsonify({
+        "message": "Contact deleted successfully"
+    }), 200
 
 
 @app.route("/contact/<int:id>", methods=["PATCH"])
@@ -54,7 +58,9 @@ def edit_contact(id):
     contact.phone_no = dt["phone_no"]
     db.session.merge(contact)
     db.session.commit()
-    return Response("OK", status=200)
+    return jsonify({
+        "message": "Contact updated successfully"
+    }), 200
 
 
 if __name__ == "__main__":

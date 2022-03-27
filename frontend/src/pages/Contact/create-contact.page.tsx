@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import { Form, Input, Button, Checkbox } from 'antd';
+import {Form, Input, Button, Checkbox, notification} from 'antd';
 import axios from "axios";
 
 export const CreateContactPage = () => {
@@ -10,10 +10,16 @@ export const CreateContactPage = () => {
         form.validateFields().then(values => {
             axios.post('/contact/create', values)
                 .then(res => {
-                    alert("DONE")
+                    notification["success"]({
+                        message: 'Success',
+                        description: res.data.message,
+                    });
                 })
                 .catch(err => {
-                    console.log(err);
+                    notification["error"]({
+                        message: 'Error',
+                        description: err.response.data.message,
+                    });
                 })
         });
     };

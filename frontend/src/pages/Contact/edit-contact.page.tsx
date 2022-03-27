@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import { Form, Input, Button, Checkbox } from 'antd';
+import {Form, Input, Button, Checkbox, notification} from 'antd';
 import axios from "axios";
 
 export const EditContactPage = ({ selectedContact, setIsModalVisible }: any) => {
@@ -8,10 +8,18 @@ export const EditContactPage = ({ selectedContact, setIsModalVisible }: any) => 
 
     const onFinish = () => {
         form.validateFields().then(values => {
-            axios.patch(`/contact/${selectedContact.id}`, values).then(() => {
-                alert("DONE")
+            axios.patch(`/contact/${selectedContact.id}`, values).then((res) => {
+                notification["success"]({
+                    message: 'Success',
+                    description: res.data.message,
+                });
                 form.resetFields();
                 setIsModalVisible(false);
+            }).catch((err) => {
+                notification["error"]({
+                    message: 'Error',
+                    description: err.response.data.message,
+                });
             });
         });
     };

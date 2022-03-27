@@ -1,4 +1,4 @@
-import {Modal, Space, Table} from "antd";
+import {Modal, notification, Space, Table} from "antd";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {EditContactPage} from "./edit-contact.page";
@@ -21,6 +21,11 @@ export const ContactPage = () => {
         axios.delete(`/contact/${selectedContact?.id}`).then(res => { }).finally(() => {
             getContactList();
             setIsDeleteModalVisible(false);
+            notification["success"]({
+                message: 'Success',
+                description:
+                    'Contact Deleted Successfully',
+            });
         });
     }
 
