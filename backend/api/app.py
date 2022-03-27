@@ -41,12 +41,13 @@ def create_contact():
 
 @app.route("/contact/<int:id>", methods=["DELETE"])
 def delete_contact(id):
+    print("HI")
     db.session.delete(db.session.query(Contact).filter_by(id=id).first())
     db.session.commit()
     return Response("OK", status=200)
 
 
-@app.route("/contact/<int:id>", methods=["patch"])
+@app.route("/contact/<int:id>", methods=["PATCH"])
 def edit_contact(id):
     dt = json.loads(request.data)
     contact = db.session.query(Contact).filter_by(id=id).first()
